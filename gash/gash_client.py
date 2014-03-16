@@ -40,6 +40,26 @@ class GashClient(object):
 
         input_dict = copy.deepcopy(input_dict)
 
+        req_data = self.make_req(input_dict)
+        rsp = requests.post(url, req_data, **kwargs)
+
+        if rsp.status_code != 200:
+            logger.fatal('status_code: %s, input_dict:%s', rsp.status_code, input_dict)
+            return None, 'status_code is %s' % rsp.status_code
+
+        try:
+            rsp_dict = self.parse_rsp(rsp.text)
+            return rsp_dict, None
+        except Exception, e:
+            logger.fatal('e: %s, input_dict: %s', e, input_dict, exc_info=True)
+            return None, str(e)
+
+    def make_req(self, input_dict):
+        """
+        传入dict，返回一个可以发送的str
+        """
+        input_dict = copy.deepcopy(input_dict)
+
         # 就算有也不能存
         input_dict.pop('ERQC', None)
 
@@ -48,30 +68,18 @@ class GashClient(object):
             input_dict['COID'],
             input_dict['CUID'],
             input_dict['AMOUNT'],
-        )
+            )
 
         trans_dict = dict(
             TRANS=input_dict
         )
+        return base64.encodestring(dict2xml(trans_dict))
 
-        rsp = requests.post(url, self.make_req(trans_dict), **kwargs)
-
-        if rsp.status_code != 200:
-            logger.fatal('status_code: %s, input_dict:%s', rsp.status_code, input_dict)
-            return None, 'status_code is %s' % rsp.status_code
-
-        try:
-            result_dict = self.parse_rsp(rsp.text)
-            return result_dict['TRANS'], None
-        except Exception, e:
-            logger.fatal('e: %s, input_dict: %s', e, input_dict, exc_info=True)
-            return None, str(e)
-
-    def make_req(self, data):
-        return base64.encodestring(dict2xml(data))
-
-    def parse_rsp(self, data):
-        return xml2dict(base64.decodestring(data))
+    def parse_rsp(self, rsp_data):
+        """
+        传入服务器返回的str，返回dict
+        """
+        return xml2dict(base64.decodestring(rsp_data))['TRANS']
 
     def make_erqc(self, cid, coid, cuid, amt):
         """
