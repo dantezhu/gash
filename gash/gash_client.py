@@ -40,7 +40,7 @@ class GashClient(object):
         # 就算有也不能存
         data.pop('ERQC', None)
 
-        data['ERQC'] = self._make_erqc(
+        data['ERQC'] = self.make_erqc(
             data['CID'],
             data['COID'],
             data['CUID'],
@@ -65,7 +65,7 @@ class GashClient(object):
     def parse_rsp(self, data):
         return xml2dict(base64.decodestring(data))
 
-    def _make_erqc(self, cid, coid, cuid, amt):
+    def make_erqc(self, cid, coid, cuid, amt):
         """
         生成ERQC
         """
