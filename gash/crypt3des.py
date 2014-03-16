@@ -34,7 +34,7 @@ class Crypt3Des(object):
         remain_len = len(src) % self.cipher.block_size
 
         if remain_len == 0:
-            return
+            return src
 
         else:
-            return '%s%s' % (src, chr(remain_len)*remain_len)
+            return '%s%s' % (src, chr(remain_len)*(self.cipher.block_size-remain_len))
