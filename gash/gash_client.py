@@ -30,7 +30,7 @@ class GashClient(object):
         self.key = key
         self.iv = iv
 
-    def post(self, url, input_dict):
+    def post(self, url, input_dict, **kwargs):
         """
         调用接口
         """
@@ -54,7 +54,7 @@ class GashClient(object):
             TRANS=input_dict
         )
 
-        rsp = requests.post(url, self.make_req(trans_dict))
+        rsp = requests.post(url, self.make_req(trans_dict), **kwargs)
 
         if rsp.status_code != 200:
             logger.fatal('status_code: %s, input_dict:%s', rsp.status_code, input_dict)
