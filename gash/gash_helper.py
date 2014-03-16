@@ -29,7 +29,7 @@ class GashHelper(object):
         self.key = key
         self.iv = iv
 
-    def pack_req(self, input_dict):
+    def pack(self, input_dict):
         """
         传入dict，返回一个可以发送的str
         """
@@ -50,7 +50,7 @@ class GashHelper(object):
         )
         return base64.encodestring(dict2xml(trans_dict))
 
-    def unpack_rsp(self, rsp_data):
+    def unpack(self, rsp_data):
         """
         传入服务器返回的str，返回dict
         """
