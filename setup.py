@@ -18,7 +18,9 @@ setup(name='gash',
       include_package_data=True,
       zip_safe=False,
       install_requires=[
-          # -*- Extra requirements: -*-
+          'requests',
+          'xmltodict',
+          'pycrypto',
       ],
       entry_points="""
       # -*- Entry points: -*-
