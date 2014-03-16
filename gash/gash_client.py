@@ -48,7 +48,8 @@ class GashClient(object):
             return None, 'status_code is %s' % rsp.status_code
 
         try:
-            rsp_dict = self.parse_rsp(rsp.text)
+            # 不要带编码的
+            rsp_dict = self.parse_rsp(rsp.content)
             return rsp_dict, None
         except Exception, e:
             logger.fatal('e: %s, input_dict: %s', e, input_dict, exc_info=True)
