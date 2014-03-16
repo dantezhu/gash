@@ -3,6 +3,7 @@
 import logging
 import base64
 from hashlib import sha1
+import copy
 
 import requests
 from crypt3des import Crypt3Des
@@ -29,34 +30,41 @@ class GashClient(object):
         self.key = key
         self.iv = iv
 
-    def post(self, url, data):
+    def post(self, url, input_dict):
         """
         调用接口
         """
-        if not isinstance(data, dict):
-            logger.fatal('data is not dict. %s', data)
-            return None, 'invalid data'
+        if not isinstance(input_dict, dict):
+            logger.fatal('input_dict is not dict. %s', input_dict)
+            return None, 'invalid input_dict'
+
+        input_dict = copy.deepcopy(input_dict)
 
         # 就算有也不能存
-        data.pop('ERQC', None)
+        input_dict.pop('ERQC', None)
 
-        data['ERQC'] = self.make_erqc(
-            data['CID'],
-            data['COID'],
-            data['CUID'],
-            data['AMOUNT'],
+        input_dict['ERQC'] = self.make_erqc(
+            input_dict['CID'],
+            input_dict['COID'],
+            input_dict['CUID'],
+            input_dict['AMOUNT'],
         )
 
-        rsp = requests.post(url, self.make_req(data))
+        trans_dict = dict(
+            TRANS=input_dict
+        )
+
+        rsp = requests.post(url, self.make_req(trans_dict))
 
         if rsp.status_code != 200:
-            logger.fatal('status_code: %s, data:%s', rsp.status_code, data)
+            logger.fatal('status_code: %s, input_dict:%s', rsp.status_code, input_dict)
             return None, 'status_code is %s' % rsp.status_code
 
         try:
-            return self.parse_rsp(rsp.text), None
+            result_dict = self.parse_rsp(rsp.text)
+            return result_dict['TRANS'], None
         except Exception, e:
-            logger.fatal('e: %s, data: %s', e, data, exc_info=True)
+            logger.fatal('e: %s, input_dict: %s', e, input_dict, exc_info=True)
             return None, str(e)
 
     def make_req(self, data):
