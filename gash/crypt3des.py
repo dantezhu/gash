@@ -16,7 +16,7 @@ class Crypt3Des(object):
         key = base64.decodestring(key)
         iv = base64.decodestring(iv)
 
-        self.cipher = DES3.DES3Cipher(key=key, iv=iv, mode=DES3.MODE_CBC)
+        self.cipher = DES3.DES3Cipher(key=key, mode=DES3.MODE_CBC, IV=iv)
 
     def encrypt(self, src):
         """
