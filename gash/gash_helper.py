@@ -64,6 +64,8 @@ class GashHelper(object):
         # 因为担心可能只能用一次
         des = Crypt3Des(self.key, self.iv)
 
+        amt = '%014d' % int(amt) * 100
+
         src = '%s%s%s%s%s' % (cid, coid, cuid, amt, self.password)
 
         result = des.encrypt(src)
@@ -81,6 +83,8 @@ class GashHelper(object):
 
         # 因为担心可能只能用一次
         des = Crypt3Des(self.key, self.iv)
+
+        amt = '%014d' % int(amt) * 100
 
         src = '%s%s%s%s%s%s' % (cid, coid, rrn, cuid, amt, rcode)
 
