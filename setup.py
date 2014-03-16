@@ -1,7 +1,7 @@
 from setuptools import setup, find_packages
 import sys, os
 
-version = '0.1.2'
+version = '0.1.3'
 
 setup(name='gash',
       version=version,
@@ -18,7 +18,6 @@ setup(name='gash',
       include_package_data=True,
       zip_safe=False,
       install_requires=[
-          'requests',
           'xmltodict',
           'pycrypto',
       ],
