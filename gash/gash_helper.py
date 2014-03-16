@@ -58,13 +58,31 @@ class GashHelper(object):
 
     def make_erqc(self, cid, coid, cuid, amt):
         """
-        生成ERQC
+        生成ERQC，生成req时用
         """
 
         # 因为担心可能只能用一次
         des = Crypt3Des(self.key, self.iv)
 
         src = '%s%s%s%s%s' % (cid, coid, cuid, amt, self.password)
+
+        result = des.encrypt(src)
+        # 20字符的2进制
+        result = sha1(result).digest()
+
+        result = base64.encodestring(result)
+
+        return result
+
+    def make_erpc(self, cid, coid, rrn, cuid, amt, rcode):
+        """
+        生成ERPC，验证gashserver的回调时用
+        """
+
+        # 因为担心可能只能用一次
+        des = Crypt3Des(self.key, self.iv)
+
+        src = '%s%s%s%s%s%s' % (cid, coid, rrn, cuid, amt, rcode)
 
         result = des.encrypt(src)
         # 20字符的2进制
