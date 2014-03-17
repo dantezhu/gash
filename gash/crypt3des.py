@@ -2,6 +2,7 @@
 
 import base64
 from Crypto.Cipher import DES3
+from utils import base64_encode_nocr
 
 
 class Crypt3Des(object):
@@ -25,7 +26,9 @@ class Crypt3Des(object):
         padding_src = self.padding_pkc_s7(src)
         #print 'padding_src:', padding_src
 
-        return self.cipher.encrypt(padding_src)
+        result = self.cipher.encrypt(padding_src)
+        # 每76个字符就会出现换行
+        return base64_encode_nocr(result)
 
     def padding_pkc_s7(self, src):
         """

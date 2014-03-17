@@ -6,7 +6,7 @@ from hashlib import sha1
 import copy
 
 from crypt3des import Crypt3Des
-from .utils import dict2xml, xml2dict
+from .utils import dict2xml, xml2dict, base64_encode_nocr
 
 logger = logging.getLogger('gash')
 
@@ -48,7 +48,7 @@ class GashHelper(object):
         trans_dict = dict(
             TRANS=input_dict
         )
-        return base64.encodestring(dict2xml(trans_dict))
+        return base64_encode_nocr(dict2xml(trans_dict))
 
     def unpack(self, rsp_data):
         """
@@ -73,7 +73,7 @@ class GashHelper(object):
         # 20字符的2进制
         result = sha1(result).digest()
 
-        result = base64.encodestring(result)
+        result = base64_encode_nocr(result)
 
         return result
 
@@ -94,6 +94,6 @@ class GashHelper(object):
         # 20字符的2进制
         result = sha1(result).digest()
 
-        result = base64.encodestring(result)
+        result = base64_encode_nocr(result)
 
         return result

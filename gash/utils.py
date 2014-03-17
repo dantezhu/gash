@@ -1,6 +1,7 @@
 # -*- coding: utf-8 -*-
 
 import xmltodict
+import base64
 
 
 def dict2xml(d):
@@ -12,3 +13,12 @@ def dict2xml(d):
 
 def xml2dict(xml):
     return xmltodict.parse(xml)
+
+
+def base64_encode_nocr(src):
+    """
+    返回不带换行的。
+    国际标准是每76个字符一个换行符
+    """
+
+    return base64.encodestring(src).replace('\n', '')
