@@ -20,6 +20,17 @@ class GashHelper(object):
     key = None
     iv = None
 
+    @classmethod
+    def dumps(cls, input_dict):
+        trans_dict = dict(
+            TRANS=input_dict
+        )
+        return base64_encode_nocr(dict2xml(trans_dict))
+
+    @classmethod
+    def loads(cls, raw_data):
+        return xml2dict(base64.decodestring(raw_data))['TRANS']
+
     def __init__(self, password, key, iv):
         """
         key
@@ -45,16 +56,13 @@ class GashHelper(object):
             input_dict['AMOUNT'],
             )
 
-        trans_dict = dict(
-            TRANS=input_dict
-        )
-        return base64_encode_nocr(dict2xml(trans_dict))
+        return self.dumps(input_dict)
 
-    def unpack(self, rsp_data):
+    def unpack(self, raw_data):
         """
         传入服务器返回的str，返回dict
         """
-        return xml2dict(base64.decodestring(rsp_data))['TRANS']
+        return self.loads(raw_data)
 
     def make_erqc(self, cid, coid, cuid, amt):
         """
