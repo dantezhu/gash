@@ -64,8 +64,8 @@ class GashHelper(object):
         # 因为担心可能只能用一次
         des = Crypt3Des(self.key, self.iv)
 
-        if len(amt) < 14:
-            amt = '%014d' % int(amt) * 100
+        if not isinstance(amt, basestring):
+            amt = '%014d' % (amt * 100)
 
         src = '%s%s%s%s%s' % (cid, coid, cuid, amt, self.password)
 
@@ -85,8 +85,8 @@ class GashHelper(object):
         # 因为担心可能只能用一次
         des = Crypt3Des(self.key, self.iv)
 
-        if len(amt) < 14:
-            amt = '%014d' % int(amt) * 100
+        if not isinstance(amt, basestring):
+            amt = '%014d' % (amt * 100)
 
         src = '%s%s%s%s%s%s' % (cid, coid, rrn, cuid, amt, rcode)
 
