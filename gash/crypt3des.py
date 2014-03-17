@@ -23,6 +23,7 @@ class Crypt3Des(object):
         加密操作
         """
         padding_src = self.padding_pkc_s7(src)
+        #print 'padding_src:', padding_src
 
         return self.cipher.encrypt(padding_src)
 
@@ -37,4 +38,5 @@ class Crypt3Des(object):
             return src
 
         else:
-            return '%s%s' % (src, chr(remain_len)*(self.cipher.block_size-remain_len))
+            need_len = self.cipher.block_size - remain_len
+            return '%s%s' % (src, chr(need_len)*need_len)
